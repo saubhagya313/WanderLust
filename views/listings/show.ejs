@@ -70,7 +70,7 @@
   <hr>
   <h4 class="mb-3">Leave a Review</h4>
 
-  <form   action="/Listings/<%= listing._id %>/reviews"  method="POST"   class="p-4 border rounded shadow-sm bg-light">
+  <form   action="/Listings/<%= listing._id %>/reviews"  method="POST"   class="p-4 border rounded shadow-sm bg-light needs-validation" novalidate>
     
     <!-- Rating -->
     <div class="mb-3">
@@ -96,7 +96,9 @@
         id="comment" 
         rows="4" 
         placeholder="Write your review here..."
+        required
       ></textarea>
+      <div class="invalid-feedback">Please Leave a comment</div>
     </div>
 
     <!-- Submit -->
@@ -105,4 +107,33 @@
     </button>
 
   </form>
+
 </div>
+
+<div class=" col-md-8 offset-md-2 mt-4 mb-4">
+  <h4>Reviews</h4>
+  <hr>
+
+  <div class="review-list">
+    <% listing.reviews.forEach((review, index) => { %>
+      <div class="review-card" style="animation-delay: <%= index * 0.15 %>s">
+        
+        <!-- Card Title -->
+        <h6 class="review-user">John Doe</h6>
+
+        <!-- Review Body -->
+        <p class="mb-1"><%= review.comment %></p>
+
+        <!-- Rating -->
+        <span class="rating">⭐ <%= review.rating %>/5</span>
+
+        <form action="/Listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"  method="POST"  class="mt-3">
+        <button>Delete</button>
+       </form>
+
+      </div>
+      
+    <% }) %>
+  </div>
+</div>
+

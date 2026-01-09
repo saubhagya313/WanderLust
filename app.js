@@ -7,7 +7,7 @@ const methodoverride=require("method-override");
 const ejsmate=require("ejs-mate");
 const wrapasync=require("./utils/wrapasync");  //wrap asynic file require
 const expresserror=require("./utils/expresserror.js");   //express error  class require
-const {ListingSchema}=require("./schema.js");
+const {ListingSchema,reviewSchema}=require("./schema.js");
 const review=require("./models/reviews.js");
 
 
@@ -45,6 +45,19 @@ const validateschema=(req,res,next)=>{
 }
 
 
+const validatereview=(req,res,next)=>{
+    let {error}=reviewSchema.validate(req.body.review);
+    if(error){
+     
+        let errmsg=error.details.map((el)=>el.message).join(",");
+        throw new expresserror(400,errmsg)
+    }
+    else{
+        next();
+    }
+}
+
+
 
 async function main() {
     await mongoose.connect(url)
@@ -69,6 +82,8 @@ app.get("/Listings/:id/edit",wrapasync( async (req,res)=>{  //edit request
     res.render("listings/edit.ejs",{listing});
 
 }))
+
+
 
 app.put("/Listings/:id",validateschema,wrapasync(async(req,res)=>{    //update the edited route
 
@@ -95,7 +110,7 @@ res.redirect(`/Listings/${id}`);
 app.get("/Listings/:id",  wrapasync( async(req,res)=>{   //seeing the details
 //    console.log(req.params);
     const {id}=req.params;
-    const listing = await list.findById(id);
+    const listing = await list.findById(id).populate('reviews');
     res.render("listings/show.ejs",{listing});
 
 
@@ -136,16 +151,26 @@ app.delete("/Listings/:id/del", wrapasync(async(req,res)=>{  //deleting the list
    res.redirect("/Listings");
 }))
 
-app.post("/Listings/:id/reviews",async(req,res)=>{   //post route for the reviewsb 
 
-     const data=await list.findById(req.params.id);
+app.delete("/Listings/:id/reviews/:reviewid",wrapasync(async(req,res)=>{
+    const {id,reviewid}=req.params;
+    await list.findByIdAndUpdate(id,{$pull:{reviews:reviewid}})
+    await review.findByIdAndDelete(reviewid);
+    res.redirect(`/Listings/${id}`)
+}))
+
+
+app.post("/Listings/:id/reviews",validatereview,async(req,res)=>{   //post route for the reviews
+
+    const data=await list.findById(req.params.id);
     const newreview=new review(req.body.review);
+   
    await data.reviews.push(newreview);  //cause i get the listing value in the data so  pushing the review using data
 
     await newreview.save();
     await data.save()
     console.log("success")
-    res.send('success');
+    res.redirect(`/Listings/${data._id}`)
    
 })
 
