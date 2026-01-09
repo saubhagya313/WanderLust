@@ -1,0 +1,17 @@
+const mongoose =require("mongoose");
+const Schema=mongoose.Schema;
+
+const reviewschema=new Schema({
+    comment:String,
+    rating:{
+        type:Number,
+        min:1,
+        max:5
+    },
+    createdate:{
+        type:Date,
+        deault:Date.now()
+    }
+})
+const Review=mongoose.model("Review",reviewschema);
+module.exports= Review;

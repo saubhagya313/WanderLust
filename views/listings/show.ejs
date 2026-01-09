@@ -1,0 +1,108 @@
+
+
+
+ <% layout("/layouts/boilerplate") %>
+
+<div class="container mt-4">
+
+  <div class="row justify-content-center">
+
+    <div class="col-md-6">
+
+  
+      <div class="card mb-4 shadow-sm mx-auto">
+        <img 
+          class="card-img-top"
+          src="<%= listing.image.url %>" 
+          alt="Listing Image"
+          style="height: 300px; object-fit: cover;"
+        >
+
+        <div class="card-body text-center">
+          <p class="fw-bold fs-5 mb-0"><%= listing.title %></p>
+        </div>
+      </div>
+
+    
+      <ul class="list-group mb-4">
+        <li class="list-group-item">
+          <strong>Description:</strong> <%= listing.description %>
+        </li>
+        <li class="list-group-item">
+          <strong>Price:</strong> ₹<%= listing.price.toLocaleString("en-IN") %>
+        </li>
+        <li class="list-group-item">
+          <strong>Location:</strong> <%= listing.location %>
+        </li>
+        <li class="list-group-item">
+          <strong>Country:</strong> <%= listing.country %>
+        </li>
+      </ul>
+
+     
+      <div class="text-center">
+        <a 
+          href="/Listings/<%= listing._id %>/edit" 
+          class="btn btn-primary me-2"
+        >
+          Edit
+        </a>
+
+        <form 
+          action="/Listings/<%= listing._id %>/del?_method=DELETE" 
+          method="POST"
+          class="d-inline"
+        >
+          <button class="btn btn-danger">Delete</button>
+        </form>
+        
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+<br>
+
+
+<div class="col-md-8 offset-md-2 mt-4 mb-4">
+  <hr>
+  <h4 class="mb-3">Leave a Review</h4>
+
+  <form   action="/Listings/<%= listing._id %>/reviews"  method="POST"   class="p-4 border rounded shadow-sm bg-light">
+    
+    <!-- Rating -->
+    <div class="mb-3">
+      <label for="rating" class="form-label">
+        Rating <span class="text-muted">(1–5)</span>
+      </label>
+      <input 
+        type="range" 
+        class="form-range" 
+        min="1" 
+        max="5" 
+        id="rating" 
+        name="review[rating]"
+      >
+    </div>
+
+    <!-- Comment -->
+    <div class="mb-3">
+      <label for="comment" class="form-label">Comments</label>
+      <textarea 
+        class="form-control" 
+        name="review[comment]" 
+        id="comment" 
+        rows="4" 
+        placeholder="Write your review here..."
+      ></textarea>
+    </div>
+
+    <!-- Submit -->
+    <button type="submit" class="btn btn-primary">
+      Submit Review
+    </button>
+
+  </form>
+</div>

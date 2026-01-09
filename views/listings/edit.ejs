@@ -1,0 +1,54 @@
+
+<% layout("/layouts/boilerplate") %>
+<div class="row mt-3">
+    <div class="col-8 offset-2">
+<body>
+    <form action="/Listings/<%= listing._id %>?_method=PUT" method="POST" class="needs-validation" novalidate>
+
+        <div class="mb-3">
+             <label for="title" class="form-label">Title</label>
+             <input name="title"  class="form-control" value="<%= listing.title %>" type="text" required>
+             <div class="invalid-feedback"> Please choose a valid Title </div>
+        </div>
+         
+        <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+              <textarea name="description" class="form-control" required><%= listing.description %></textarea>
+               <div class="invalid-feedback"> Please choose a valid Description </div>
+        </div>
+        <div class="mb-3">
+                 <label for="image" class="form-label">Image url</label>
+                <input  class="form-control" name="image" value=<%= listing.image.url %> required >
+                 <div class="invalid-feedback"> Please give valid Image url </div>
+        </div>
+
+        <div class="row">
+
+            <div class="mb-3 col-md-4">
+                <label for="price" class="form-label">Price</label>
+                <input class="form-control" name="price" value=<%= listing.price %> type="number" required>
+                 <div class="invalid-feedback"> Please give valid Price </div>
+            </div>
+            <div class="mb-3 col-md-8">
+                    <label for="country" class="form-label">Country</label>
+                    <input class="form-control" name="country" value="<%= listing.country %>" type="text" required>
+                     <div class="invalid-feedback"> Please choose a valid Country </div>
+            </div>
+        </div>
+
+
+
+        <div class="mb-3">
+                 <label for="location" class="form-label" >Location</label>
+                <input class="form-control" name="location" value="<%= listing.location %>" type="text" required>
+                <div class="invalid-feedback"> Please choose a valid Location</div>
+            </div>
+       
+            <button class="btn btn-dark" style="background-color: #fe424d; border: none;">submit</button>
+    </form>
+
+    <script src="/javascript/script.js"></script>
+</body>
+</div>
+</div>
+
