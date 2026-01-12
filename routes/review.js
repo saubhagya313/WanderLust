@@ -21,11 +21,13 @@ const validatereview=(req,res,next)=>{
 
 
 
-router.delete("/:reviewid",wrapasync(async(req,res)=>{
+router.delete("/:reviewid",wrapasync(async(req,res)=>{    //review delete
     const {id,reviewid}=req.params;
     await list.findByIdAndUpdate(id,{$pull:{reviews:reviewid}})
     await review.findByIdAndDelete(reviewid);
+    req.flash("success","Review deleted!")
     res.redirect(`/Listings/${id}`)
+    
 }))
 
 
@@ -39,6 +41,7 @@ router.post("/",validatereview,async(req,res)=>{   //post route for the reviews
     await newreview.save();
     await data.save()
     console.log("success")
+    req.flash("success","Review posted!")
     res.redirect(`/Listings/${data._id}`)
    
 })

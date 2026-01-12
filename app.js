@@ -7,11 +7,25 @@ const methodoverride=require("method-override");
 const ejsmate=require("ejs-mate");
 
 const expresserror=require("./utils/expresserror.js");   //express error  class require
-
-
-
 const Exprouter=require("./routes/listing.js");  //its my express router
 const reviewrouter=require("./routes/review.js") // its my review express router
+
+const flash = require('connect-flash'); // to create flash messages
+
+const session= require('express-session');  //express sesssion to create session id
+app.use(session({  //createing a session secret for my session
+  secret: 'mysecret',
+  resave: false,
+  saveUninitialized: true,
+  cookie:{
+    expires:Date.now()+7*24*60*60*1000,
+    maxAge:7*24*60*60*1000,
+    httpOnly:true
+  }
+ 
+}))
+
+
 
 const path=require("path");
 app.use(express.urlencoded({ extended: true }));
@@ -48,6 +62,12 @@ async function main() {
 }
 
 
+app.use(flash());
+app.use((req,res,next)=>{
+    res.locals.succmsg=req.flash("success");
+    res.locals.errmsg=req.flash("error");
+    next()
+})
 
 app.use("/Listings",Exprouter);  //express router when i get Listings i will use Listings
 app.use("/Listings/:id/reviews",reviewrouter)  //review router 
