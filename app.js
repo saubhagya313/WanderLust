@@ -7,11 +7,17 @@ const methodoverride=require("method-override");
 const ejsmate=require("ejs-mate");
 
 const expresserror=require("./utils/expresserror.js");   //express error  class require
-const Exprouter=require("./routes/listing.js");  //its my express router
+const Listingrouter=require("./routes/listing.js");  //its my express router
 const reviewrouter=require("./routes/review.js") // its my review express router
+const usersrouter=require("./routes/users.js"); // its my users express route
+
+
+const LocalStrategy=require("passport-local");   //these three are for authentication local,passport,usermodel
+const  passport=require("passport");
+const User=require("./models/user.js");
+
 
 const flash = require('connect-flash'); // to create flash messages
-
 const session= require('express-session');  //express sesssion to create session id
 app.use(session({  //createing a session secret for my session
   secret: 'mysecret',
@@ -24,7 +30,7 @@ app.use(session({  //createing a session secret for my session
   }
  
 }))
-
+app.use(flash());   //forflash messages
 
 
 const path=require("path");
@@ -49,32 +55,35 @@ main().then(()=>{
 app.listen(8082,()=>{
     console.log("port started");
 })
-
-
-
-
-
-
-
-
 async function main() {
     await mongoose.connect(url)
 }
 
 
-app.use(flash());
-app.use((req,res,next)=>{
+
+
+
+
+passport.initialize()   //initialize passport
+passport.session()  //create a session to store user data
+passport.use(new LocalStrategy(User.authenticate()));  //passport will use his strategy for authentication
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use((req,res,next)=>{  //flash message middleware
     res.locals.succmsg=req.flash("success");
     res.locals.errmsg=req.flash("error");
     next()
 })
 
-app.use("/Listings",Exprouter);  //express router when i get Listings i will use Listings
-app.use("/Listings/:id/reviews",reviewrouter)  //review router 
 
-app.get("/",(req,res)=>{
-    res.send("hello !!! welocme")
-})
+
+
+app.use("/Listings",Listingrouter);  //express router when i get Listings i will use Listings
+app.use("/Listings/:id/reviews",reviewrouter)  //review router 
+app.use("/",usersrouter);//users router for sigup login stuffs
+
+
 
 app.all(/.*/,(req,res,next)=>{   //middleware to handle all the wrong routes
     next(new expresserror(404,"page not found"));
