@@ -6,7 +6,7 @@ const ejsmate=require("ejs-mate");
 const wrapasync=require("../utils/wrapasync");  //wrap asynic file require
 const expresserror=require("../utils/expresserror.js");   //express error  class require
 const {ListingSchema,reviewSchema}=require("../schema.js");
-
+const {islogged,canChange}=require("../middleware.js");
 
 const validateschema=(req,res,next)=>{
     let {error}= ListingSchema.validate(req.body);
@@ -26,11 +26,11 @@ router.get("/", wrapasync( async (req,res)=>{  //index route
    
 }))
 
-router.get("/new",(req,res)=>{    //create new listing
+router.get("/new", islogged,(req,res)=>{    //create new listing
         res.render("listings/new.ejs");
 })
 
-router.get("/:id/edit",wrapasync( async (req,res)=>{  //edit request
+router.get("/:id/edit", islogged,canChange,wrapasync( async (req,res)=>{  //edit request
     const {id}=req.params;
     const listing=await list.findById(id);
       if(!listing){
@@ -43,8 +43,7 @@ router.get("/:id/edit",wrapasync( async (req,res)=>{  //edit request
 
 
 
-router.put("/:id",validateschema,wrapasync(async(req,res)=>{    //update the edited route
-
+router.put("/:id",islogged,canChange,validateschema,wrapasync(async(req,res)=>{    //update the edited route
 
 const listingdata=req.body;
 if(listingdata.image && listingdata.image.trim()!=""){
@@ -57,7 +56,8 @@ else{
     delete listingdata.image;
 }
 let {id}=req.params;
-console.log(req.body);
+
+
 
 
 await list.findByIdAndUpdate(id,listingdata);
@@ -69,7 +69,14 @@ res.redirect(`/Listings/${id}`);
 router.get("/:id",  wrapasync( async(req,res)=>{   //seeing the details
 //    console.log(req.params);
     const {id}=req.params;
-    const listing = await list.findById(id).populate('reviews');
+    const listing = await list.findById(id)
+    .populate({path:'reviews',
+        populate:{
+            path:'author'
+        }
+    })
+    .populate('owner');
+   
     if(!listing){
         req.flash("error","The Listing doesnt exist");
       return  res.redirect("/Listings");
@@ -97,7 +104,9 @@ router.post("/add", validateschema,wrapasync( async (req,res,next)=>{  //adding 
         filename: "listingimage",
         url: req.body.image
     }}
-    
+  
+    listingdata.owner=req.user._id;
+
     const newlisting=new list(listingdata);
     await newlisting.save();
     req.flash("success","new listing added !!");
@@ -106,7 +115,7 @@ router.post("/add", validateschema,wrapasync( async (req,res,next)=>{  //adding 
 ))
 
 
-router.delete("/:id/del", wrapasync(async(req,res)=>{  //deleting the list
+router.delete("/:id/del", canChange,wrapasync(async(req,res)=>{  //deleting the list
     const {id}=req.params;
     console.log(id);
    await list.findByIdAndDelete(id);

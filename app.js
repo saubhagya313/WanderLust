@@ -42,6 +42,9 @@ app.set("views",path.join(__dirname,"views"));
 app.use(methodoverride("_method"));
 app.engine('ejs',ejsmate);
 app.use(express.static(path.join(__dirname,"/public"))) //styling for all the files we need to server the static files inside the boilderplate.ejs
+app.use(passport.initialize());   
+app.use(passport.session());      
+
 
 const url="mongodb://127.0.0.1:27017/Major_Project"
 
@@ -73,6 +76,8 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next)=>{  //flash message middleware
     res.locals.succmsg=req.flash("success");
     res.locals.errmsg=req.flash("error");
+    res.locals.user=req.user;
+    
     next()
 })
 

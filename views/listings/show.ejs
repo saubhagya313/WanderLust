@@ -18,9 +18,12 @@
           style="height: 300px; object-fit: cover;"
         >
 
-        <div class="card-body text-center">
-          <p class="fw-bold fs-5 mb-0"><%= listing.title %></p>
-        </div>
+          <div class="card-body text-center">
+      <p class="fw-bold fs-5 mb-1"><%= listing.title %></p>
+      <small class="text-muted">
+        Hosted by <%= listing.owner.username %>
+      </small>
+    </div>
       </div>
 
     
@@ -39,7 +42,7 @@
         </li>
       </ul>
 
-     
+     <% if(user){ %>
       <div class="text-center">
         <a 
           href="/Listings/<%= listing._id %>/edit" 
@@ -57,6 +60,9 @@
         </form>
         
       </div>
+      <% } %>
+ 
+      
 
     </div>
 
@@ -65,7 +71,7 @@
 </div>
 <br>
 
-
+<% if(user){ %>
 <div class="col-md-8 offset-md-2 mt-4 mb-4">
   <hr>
   <h4 class="mb-3">Leave a Review</h4>
@@ -109,6 +115,7 @@
   </form>
 
 </div>
+<% } %>
 
 <div class=" col-md-8 offset-md-2 mt-4 mb-4">
   <h4>Reviews</h4>
@@ -119,7 +126,7 @@
       <div class="review-card" style="animation-delay: <%= index * 0.15 %>s">
         
         <!-- Card Title -->
-        <h6 class="review-user">John Doe</h6>
+        <h6 class="review-user"><%= review.author.username %></h6>
 
         <!-- Review Body -->
         <p class="mb-1"><%= review.comment %></p>

@@ -18,6 +18,7 @@ async function main() {
 
 async function initdb() {
     await list.deleteMany({});
+    initdata.data=initdata.data.map((obj)=>({...obj,owner:'696fb0fb6c814d353f88a9ba'}))
     await list.insertMany(initdata.data);
     console.log("database updated");
 }
