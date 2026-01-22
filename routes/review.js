@@ -5,50 +5,16 @@ const {ListingSchema,reviewSchema}=require("../schema.js");
 const review=require("../models/reviews.js"); 
 const wrapasync=require("../utils/wrapasync");  //wrap asynic file require
 const expresserror=require("../utils/expresserror.js");   //express error  class require
-const {islogged,canChange,canAuthor}=require("../middleware.js");
-
-
-const validatereview=(req,res,next)=>{
-    let {error}=reviewSchema.validate(req.body.review);
-    if(error){
-     
-        let errmsg=error.details.map((el)=>el.message).join(",");
-        throw new expresserror(400,errmsg)
-    }
-    else{
-        next();
-    }
-}
+const {islogged,canChange,canAuthor,validatereview}=require("../middleware.js");
+const reviewController=require("../controller/reviews.js")
 
 
 
 
-router.delete("/:reviewid",islogged,canAuthor,wrapasync(async(req,res)=>{    //review delete
-    const {id,reviewid}=req.params;
-    await list.findByIdAndUpdate(id,{$pull:{reviews:reviewid}})
-    await review.findByIdAndDelete(reviewid);
-    req.flash("success","Review deleted!")
-    res.redirect(`/Listings/${id}`)
-    
-}))
+router.delete("/:reviewid",islogged,canAuthor,wrapasync(reviewController.deleteReview))
 
 
-router.post("/",islogged,validatereview,async(req,res)=>{   //post route for the reviews
-
-    const data=await list.findById(req.params.id);
-   
-    const newreview=new review(req.body.review);
-
-   newreview.author=res.locals.user;
-   await data.reviews.push(newreview);  //cause i get the listing value in the data so  pushing the review using data
-
-    await newreview.save();
-    await data.save()
-    console.log("success")
-    req.flash("success","Review posted!")
-    res.redirect(`/Listings/${data._id}`)
-   
-})
+router.post("/",islogged,validatereview,reviewController.postReview)
 
 
 module.exports=router;

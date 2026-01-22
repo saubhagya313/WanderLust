@@ -1,6 +1,9 @@
 
 const list=require("./models/listings.js")
 const review=require("./models/reviews.js")
+const {ListingSchema,reviewSchema}=require("./schema.js");
+
+
 module.exports.islogged = async(req,res,next)=>{
   
     if(!req.isAuthenticated()){
@@ -43,4 +46,30 @@ module.exports.canAuthor=async(req,res,next)=>{
       return  res.redirect(`/Listings/${id}`)
     }
     next();
+}
+
+
+module.exports.validateschema=(req,res,next)=>{
+    let {error}= ListingSchema.validate(req.body);
+
+   if(error){
+    let errmsg=error.details.map((el)=>el.message).join(",");
+    throw new expresserror(400,errmsg);
+   }
+   else{
+    next();
+   }
+}
+
+
+module.exports.validatereview=(req,res,next)=>{
+    let {error}=reviewSchema.validate(req.body.review);
+    if(error){
+     
+        let errmsg=error.details.map((el)=>el.message).join(",");
+        throw new expresserror(400,errmsg)
+    }
+    else{
+        next();
+    }
 }
