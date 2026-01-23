@@ -12,20 +12,19 @@ const {islogged,canChange,validateschema}=require("../middleware.js");
 const listingController=require("../controller/listing.js");
 
 
+
+router.route("/:id")  //here we deined path once so dont need to define it for all 
+.put(islogged,canChange,validateschema,wrapasync(listingController.updateEdited))
+.get(wrapasync(listingController.showDetails))
+
+
+//rest are havig different paths
+
 router.get("/", wrapasync(listingController.index))
 
 router.get("/new", islogged,listingController.newformRender)
 
 router.get("/:id/edit", islogged,canChange,wrapasync(listingController.editListing))
-
-
-
-router.put("/:id",islogged,canChange,validateschema,wrapasync(listingController.updateEdited))
-
-
-router.get("/:id",  wrapasync(listingController.showDetails))
-
-
 
 
 router.post("/add", validateschema,wrapasync(listingController.createNewListing))
