@@ -197,3 +197,10 @@
     transform: translateY(0);
   }
 }
+
+
+/* maps */
+#map { 
+   height: 400px;
+   width: 80vh;
+}

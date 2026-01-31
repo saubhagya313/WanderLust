@@ -3,7 +3,7 @@
 <div class="row mt-3">
     <div class="col-8 offset-2">
 <body>
-    <form action="/Listings/<%= listing._id %>?_method=PUT" method="POST" class="needs-validation" novalidate>
+    <form action="/Listings/<%= listing._id %>?_method=PUT" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
 
         <div class="mb-3">
              <label for="title" class="form-label">Title</label>
@@ -17,8 +17,12 @@
                <div class="invalid-feedback"> Please choose a valid Description </div>
         </div>
         <div class="mb-3">
+                <p>image preview</p>
+                <img src="<%=imageurl %>" alt="listing_image">
+        </div>
+        <div class="mb-3">
                  <label for="image" class="form-label">Image url</label>
-                <input  class="form-control" name="image" value=<%= listing.image.url %> required >
+                <input  class="form-control" name="image" type="file" >
                  <div class="invalid-feedback"> Please give valid Image url </div>
         </div>
 
