@@ -1,12 +1,91 @@
 <% layout('/layouts/boilerplate') -%>
 
 <body>
- 
-    <h3 style="padding-left: 1.7rem;">Listings</h3>
+       <style>
+        .filters{
+          display: flex;
+          flex-wrap: wrap;
+          
+        }
+        .filter{
+          text-align: center;
+          
+          margin-top: 1rem;
+          margin-right: 0.2rem;
+          opacity: 0.7;
+        }
+        .filter:hover{
+          opacity: 1;
+          cursor: pointer;
+        }
+       </style>
+
+      <div class="filters row  text-center">
+
+  <div class="filter col-lg-1 col-md-2  col-sm-3 col-3 ">
+    <i class="fa-solid fa-fire"></i>
+    <p>Trending</p>
+  </div>
+
+  <div class="filter col-lg-1 col-md-2 col-sm-3 col-3">
+    <i class="fa-solid fa-bed"></i>
+    <p>Rooms</p>
+  </div>
+
+  <div class="filter col-lg-1 col-md-2 col-sm-3 col-3">
+    <i class="fa-solid fa-mountain-city"></i>
+    <p>Iconic Cities</p>
+  </div>
+
+  <div class="filter col-lg-1 col-md-2 col-sm-3 col-3">
+   <i class="fa-solid fa-person-swimming"></i>
+    <p>Pools</p>
+  </div>
+
+  
+  <div class="filter col-lg-1 col-md-2 col-sm-3 col-3">
+    <i class="fa-brands fa-fort-awesome"></i>
+    <p>Castles</p>
+</div>
+
+  
+  <div class="filter col-lg-1 col-md-2 col-sm-3 col-3">
+    <i class="fa-solid fa-tent"></i>
+    <p>Camping</p>
+  </div>
+
+  
+  <div class="filter col-lg-1 col-md-2 col-sm-3 col-3">
+   <i class="fa-solid fa-tractor"></i>
+    <p>Farms</p>
+  </div>
+  
+  <div class="filter col-lg-1 col-md-2 col-sm-3 col-3">
+ <i class="fa-solid fa-snowflake"></i>
+    <p>Arctic</p>
+  </div>
+
+     <div class=" filter switch-toggle d-flex  align-items-center col-lg-1 col-md-2 col-sm-3 col-3 mt-2">
+      <div class="form-check form-switch" >
+      <label class="form-check-label" for="switchCheckDefault">Price with Tax</label>
+      <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+     
+      </div>
+     </div>
+      
+  
+
+
+  
+</div>
+
+
+
+
        <!-- <form action="/Listing/new" method="GET">
     <button type="submit">Create New Listing</button>
         </form> -->
-    <br>
+ 
     
 
 

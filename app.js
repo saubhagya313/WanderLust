@@ -98,7 +98,7 @@ app.all(/.*/,(req,res,next)=>{   //middleware to handle all the wrong routes
 
 
 
-
+ 
 
 app.use((err,req,res,next)=>{      //error handler middle ware
     const{status=500,message="something went wrong"}=err;
